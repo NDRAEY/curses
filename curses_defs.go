@@ -44,6 +44,7 @@ const (
     KEY_UP    = C.KEY_UP
     KEY_LEFT  = C.KEY_LEFT
     KEY_RIGHT = C.KEY_RIGHT
+	KEY_RESIZE = C.KEY_RESIZE
 )
 
 // Error return value
