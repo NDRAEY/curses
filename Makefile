@@ -1,7 +1,7 @@
 include $(GOROOT)/src/Make.inc
 
 TARG=github.com/thiagoncc/curses
-CGOFILES=curses.go curses_defs.go
+CGOFILES=curses.go curses_defs.go curses_acs.go
 CGO_LDFLAGS=-lncurses
 
 include $(GOROOT)/src/Make.pkg
