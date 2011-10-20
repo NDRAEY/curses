@@ -1,68 +1,104 @@
 package curses
 
-/* This provides functionality for all the ACS_* macros defined in ncurses.h
- * which are for accessing special characters based on the terminfo. Unfortunately,
- * these are defined as macros which grab a value out of 'acs_map', and cgo doesn't
- * seem to understand that. e.g., the following does not work:
- *
- * var ACS_ULCORNER int = C.ACS_ULCORNER
- *   ('Undefined reference to ACS_ULCORNER')
- *
- * nor does
- *
- * var ACS_ULCORNER int = C.acs_map['l']
- *   ('assignment to non-const value')
- *
- * So my solution is to effectively wrap acs_map in a C function, then effectively
- * rewrite all the macros that reference it. I'm not sure how portable this is.
- */
-
-// #include <ncurses.h>
-// chtype hack_acs_map(unsigned char i) {
-//   return acs_map[i];
-// }
+// #include "curses_acs.h"
 import "C"
 
-func ACS_ULCORNER() int {
-	return int(C.hack_acs_map('l'))
+func ACS_ULCORNER() uint32 {
+	return uint32(C.wrap_ACS_ULCORNER())
 }
 
-func ACS_LLCORNER() int {
-	return int(C.hack_acs_map('m'))
+func ACS_LLCORNER() uint32 {
+	return uint32(C.wrap_ACS_LLCORNER())
 }
 
-func ACS_URCORNER() int {
-	return int(C.hack_acs_map('k'))
+func ACS_URCORNER() uint32 {
+	return uint32(C.wrap_ACS_URCORNER())
 }
 
-func ACS_LRCORNER() int {
-	return int(C.hack_acs_map('j'))
+func ACS_LRCORNER() uint32 {
+	return uint32(C.wrap_ACS_LRCORNER())
 }
 
-func ACS_LTEE() int {
-	return int(C.hack_acs_map('t'))
+func ACS_LTEE() uint32 {
+	return uint32(C.wrap_ACS_LTEE())
 }
 
-func ACS_RTEE() int {
-	return int(C.hack_acs_map('u'))
+func ACS_RTEE() uint32 {
+	return uint32(C.wrap_ACS_RTEE())
 }
 
-func ACS_BTEE() int {
-	return int(C.hack_acs_map('v'))
+func ACS_BTEE() uint32 {
+	return uint32(C.wrap_ACS_BTEE())
 }
 
-func ACS_TTEE() int {
-	return int(C.hack_acs_map('w'))
+func ACS_TTEE() uint32 {
+	return uint32(C.wrap_ACS_TTEE())
 }
 
-func ACS_HLINE() int {
-	return int(C.hack_acs_map('q'))
+func ACS_HLINE() uint32 {
+	return uint32(C.wrap_ACS_HLINE())
 }
 
-func ACS_VLINE() int {
-	return int(C.hack_acs_map('x'))
+func ACS_VLINE() uint32 {
+	return uint32(C.wrap_ACS_VLINE())
 }
 
-func ACS_PLUS() int {
-	return int(C.hack_acs_map('n'))
+func ACS_PLUS() uint32 {
+	return uint32(C.wrap_ACS_PLUS())
+}
+
+func ACS_S1() uint32 {
+	return uint32(C.wrap_ACS_S1())
+}
+
+func ACS_S9() uint32 {
+	return uint32(C.wrap_ACS_S9())
+}
+
+func ACS_DIAMOND() uint32 {
+	return uint32(C.wrap_ACS_DIAMOND())
+}
+
+func ACS_CKBOARD() uint32 {
+	return uint32(C.wrap_ACS_CKBOARD())
+}
+
+func ACS_DEGREE() uint32 {
+	return uint32(C.wrap_ACS_DEGREE())
+}
+
+func ACS_PLMINUS() uint32 {
+	return uint32(C.wrap_ACS_PLMINUS())
+}
+
+func ACS_BULLET() uint32 {
+	return uint32(C.wrap_ACS_BULLET())
+}
+
+func ACS_LARROW() uint32 {
+	return uint32(C.wrap_ACS_LARROW())
+}
+
+func ACS_RARROW() uint32 {
+	return uint32(C.wrap_ACS_RARROW())
+}
+
+func ACS_DARROW() uint32 {
+	return uint32(C.wrap_ACS_DARROW())
+}
+
+func ACS_UARROW() uint32 {
+	return uint32(C.wrap_ACS_UARROW())
+}
+
+func ACS_BOARD() uint32 {
+	return uint32(C.wrap_ACS_BOARD())
+}
+
+func ACS_LANTERN() uint32 {
+	return uint32(C.wrap_ACS_LANTERN())
+}
+
+func ACS_BLOCK() uint32 {
+	return uint32(C.wrap_ACS_BLOCK())
 }

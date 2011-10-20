@@ -1,8 +1,8 @@
 *.c
 *.o
 *.6
-*.h
 sample
 *.cgo*
+_cgo_export.h
 _obj/
 *_gotypes.go
