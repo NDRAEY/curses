@@ -12,15 +12,17 @@ import "unsafe"
 import "fmt"
 
 // Curses window type.
-type Window C.WINDOW
+type Window struct {
+	cwin *C.WINDOW
+}
 
 // Standard window.
-var Stdscr *Window = (*Window)(C.stdscr)
+var Stdscr *Window = &Window{C.stdscr}
 
 // Initializes curses.
 // This function should be called before using the package.
 func Initscr() *Window {
-    Stdscr = (*Window)(C.initscr())
+    Stdscr = &Window{C.initscr()}
     return Stdscr
 }
 
@@ -47,12 +49,12 @@ func Noecho() {
 
 // Enable reading of function keys.
 func (win *Window) Keypad(on bool) {
-    C.keypad((*C.WINDOW)(win), C.bool(on))
+    C.keypad(win.cwin, C.bool(on))
 }
 
 // Get char from the standard in.
 func (win *Window) Getch() int {
-    return int(C.wgetch((*C.WINDOW)(win)))
+    return int(C.wgetch(win.cwin))
 }
 
 // Get char from the standard in.
@@ -76,15 +78,15 @@ func Attrset(attr int) {
 }
 
 func (win *Window) Attron(attr int) {
-	C.wattron((*C.WINDOW)(win), C.int(attr))
+	C.wattron(win.cwin, C.int(attr))
 }
 
 func (win *Window) Attroff(attr int) {
-	C.wattroff((*C.WINDOW)(win), C.int(attr))
+	C.wattroff(win.cwin, C.int(attr))
 }
 
 func (win *Window) Attrset(attr int) {
-	C.wattrset((*C.WINDOW)(win), C.int(attr))
+	win.cwin._attrs = C.attr_t(attr)
 }
 
 // Refresh screen.
@@ -94,7 +96,7 @@ func Refresh() {
 
 // Refresh given window.
 func (win *Window) Refresh() {
-    C.wrefresh((*C.WINDOW)(win))
+    C.wrefresh(win.cwin)
 }
 
 // Finalizes curses.
@@ -104,13 +106,13 @@ func End() {
 
 // Create new window.
 func NewWindow(height, width, starty, startx int) *Window {
-    return (*Window)(C.newwin(C.int(height), C.int(width),
-        C.int(starty), C.int(startx)))
+    return &Window{C.newwin(C.int(height), C.int(width),
+        C.int(starty), C.int(startx))}
 }
 
 // Set box lines.
 func (win *Window) Box(v, h int) {
-    C.box((*C.WINDOW)(win), C.chtype(v), C.chtype(h))
+    C.box(win.cwin, C.chtype(v), C.chtype(h))
 }
 
 // Set border characters.
@@ -123,23 +125,23 @@ func (win *Window) Box(v, h int) {
 // 7. bl: character to be used for the bottom left corner of the window 
 // 8. br: character to be used for the bottom right corner of the window
 func (win *Window) Border(ls, rs, ts, bs, tl, tr, bl, br int) {
-    C.wborder((*C.WINDOW)(win), C.chtype(ls), C.chtype(rs), C.chtype(ts), C.chtype(bs), C.chtype(tl), C.chtype(tr), C.chtype(bl), C.chtype(br))
+    C.wborder(win.cwin, C.chtype(ls), C.chtype(rs), C.chtype(ts), C.chtype(bs), C.chtype(tl), C.chtype(tr), C.chtype(bl), C.chtype(br))
 }
 
 // Delete current window.
 func (win *Window) Del() {
-    C.delwin((*C.WINDOW)(win))
+    C.delwin(win.cwin)
 }
 
 // Get windows sizes.
 func (win *Window) Getmaxyx() (row, col int) {
-    row = int(C.getmaxy((*C.WINDOW)(win)))
-    col = int(C.getmaxx((*C.WINDOW)(win)))
+	row = int(win.cwin._maxx)
+	col = int(win.cwin._maxy)
     return row, col
 }
 
 func (win *Window) Setscrreg(top, bot int) {
-    C.wsetscrreg((*C.WINDOW)(win), C.int(top), C.int(bot))
+    C.wsetscrreg(win.cwin, C.int(top), C.int(bot))
 }
 
 func Addstr(str ...interface{}) {
@@ -165,36 +167,36 @@ func Mvaddch(y, x int, ch int) {
 func (win *Window) Addstr(str ...interface{}) {
     res := (*C.char)(C.CString(fmt.Sprint(str...)))
     defer C.free(unsafe.Pointer(res))
-    C.waddstr((*C.WINDOW)(win), res)
+    C.waddstr(win.cwin, res)
 }
 
 func (win *Window) Mvaddstr(y, x int, str ...interface{}) {
     res := (*C.char)(C.CString(fmt.Sprint(str...)))
     defer C.free(unsafe.Pointer(res))
-    C.mvwaddstr((*C.WINDOW)(win), C.int(y), C.int(x), res)
+    C.mvwaddstr(win.cwin, C.int(y), C.int(x), res)
 }
 
 func (win *Window) Addch(ch int) {
-	C.waddch((*C.WINDOW)(win), C.chtype(ch))
+	C.waddch(win.cwin, C.chtype(ch))
 }
 
 func (win *Window) Mvaddch(y, x int, ch int) {
-	C.mvwaddch((*C.WINDOW)(win), C.int(y), C.int(x), C.chtype(ch))
+	C.mvwaddch(win.cwin, C.int(y), C.int(x), C.chtype(ch))
 }
 
 // Hardware insert/delete feature.
 func (win *Window) Idlok(bf bool) {
-    C.idlok((*C.WINDOW)(win), C.bool(bf))
+    C.idlok(win.cwin, C.bool(bf))
 }
 
 // Enable window scrolling.
 func (win *Window) Scrollok(bf bool) {
-    C.scrollok((*C.WINDOW)(win), C.bool(bf))
+    C.scrollok(win.cwin, C.bool(bf))
 }
 
 // Scroll given window.
 func (win *Window) Scroll() {
-    C.scroll((*C.WINDOW)(win))
+    C.scroll(win.cwin)
 }
 
 // Get terminal size.
@@ -206,5 +208,5 @@ func Getmaxyx() (row, col int) {
 
 // Erases content from cursor to end of line inclusive.
 func (win *Window) Clrtoeol() {
-    C.wclrtoeol((*C.WINDOW)(win))
+    C.wclrtoeol(win.cwin)
 }
