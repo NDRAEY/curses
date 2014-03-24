@@ -7,6 +7,7 @@ package curses
 // void Wprintw (WINDOW* win, const char* str) { wprintw (win, str); }
 // void Mvprintw (int y, int x, const char* str) { mvprintw (y, x, str); }
 // void Mvwprintw (WINDOW* win, int y, int x, const char* str) { mvwprintw (win, y, x, str); }
+// void go_attr_get(int *attrs, short *colorpair) { attr_get((attr_t*)attrs, colorpair, NULL); }
 import "C"
 import (
 	"fmt"
@@ -106,6 +107,16 @@ func Attroff(attr int) {
 // Set attribute
 func Attrset(attr int) {
 	C.attrset(C.int(attr))
+}
+
+// Get current attributes
+func Attrget() (int, ColorPair) {
+	var attrs C.int
+	var color C.short
+
+	C.go_attr_get(&attrs, &color)
+
+	return int(attrs), ColorPair(color)
 }
 
 func (win *Window) Attron(attr int) {
