@@ -50,6 +50,24 @@ func Noecho() {
 	C.noecho()
 }
 
+// Copies blanks to every position on the window.
+func Erase() {
+	C.erase()
+}
+
+func (win *Window) Erase() {
+	C.werase(win.cwin)
+}
+
+// Copies blanks to every position on the window buffer.
+func Clear() {
+	C.clear()
+}
+
+func (win *Window) Clear() {
+	C.wclear(win.cwin)
+}
+
 // Sets global read timeout; if negative input will be blocking.
 func Timeout(d time.Duration) {
 	C.timeout(C.int(d / time.Millisecond))
