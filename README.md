@@ -38,11 +38,5 @@ Installation
 goinstall is now supporting cgo packages, therefore installing curses.go
 should be as easy as:
 
-    $ goinstall github.com/tncardoso/curses.go
+    $ goinstall github.com/NDRAEY/curses.go
 
-If you have problems with goinstall, you can update your go release or
-clone the repository:
-
-    $ git clone git://github.com/tncardoso/curses.go.git
-    $ cd curses.go
-    $ gomake install
