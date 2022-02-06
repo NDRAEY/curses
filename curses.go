@@ -93,6 +93,10 @@ func Move(y, x int) {
 	C.move(C.int(y), C.int(x))
 }
 
+func (win *Window) Wmove(y, x int) {
+	C.wmove(win.cwin, C.int(y), C.int(x))
+}
+
 // Get char from the standard in.
 func Getch() int {
 	return int(C.getch())
