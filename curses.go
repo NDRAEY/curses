@@ -89,6 +89,10 @@ func (win *Window) Getch() int {
 	return int(C.wgetch(win.cwin))
 }
 
+func Move(y, x int) {
+	C.move(C.int(y), C.int(x))
+}
+
 // Get char from the standard in.
 func Getch() int {
 	return int(C.getch())
