@@ -23,6 +23,7 @@ type Window struct {
 // Standard window.
 var Stdscr *Window = &Window{C.stdscr}
 
+
 // Initializes curses.
 // This function should be called before using the package.
 func Initscr() *Window {
